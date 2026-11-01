@@ -4,21 +4,27 @@
   "version": "0.1.0",
   "type": "module",
   "workspaces": [
-    "client"
+    "client",
+    "server"
   ],
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "npm run dev -w client",
+    "dev": "concurrently -n server,client -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
     "dev:client": "npm run dev -w client",
-    "build": "npm run build -w client",
-    "lint": "npm run lint -w client",
-    "typecheck": "npm run typecheck -w client",
-    "test": "vitest run --passWithNoTests",
+    "dev:server": "npm run dev -w server",
+    "build": "npm run build -w server && npm run build -w client",
+    "start": "npm run start -w server",
+    "lint": "npm run lint -w client && npm run lint -w server",
+    "typecheck": "npm run typecheck -w client && npm run typecheck -w server",
+    "test": "vitest run",
+    "verify:feeds": "npm run verify:feeds -w server",
+    "verify:content": "npm run verify:content -w server",
     "format": "prettier --write ."
   },
   "devDependencies": {
+    "concurrently": "^10.0.6",
     "prettier": "^3.9.10",
     "vitest": "^5.0.5"
   }
